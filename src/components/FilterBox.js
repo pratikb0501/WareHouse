@@ -1,27 +1,35 @@
 import React from "react";
 
 
-function FilterBox() {
+function FilterBox(props) {
 
     const divStyle = {
         backgroundColor: "grey",
         color: "white"
     }
 
-    const cities = ['Mumbai', 'Indore', 'Delhi', 'Chennai', 'Banglore', 'Guwahati'];
-    const clusters = ['cluster-a-32', 'cluster-a-1', 'cluster-a-21', 'cluster-a-2', 'cluster-v-2'];
-    const spaceAvailable = [1234, 124, 134, 12, 1243434, 1, 4, 3456, 1234545, 121234, 98, 97, 654]
+    const cities = props.cityArray;
+    const cluster = props.clusterArray;
+    const space = props.spaceArray;
+
 
 
     return (
-        <div >
-
+        <div style={{ divStyle }}>
+            <h6>Filter by</h6>
             <select>
-                <option>By city </option>
-                {cities.map(city => {
-                    <option>{city}</option>
-                })}
+                <option defaultValue>By city </option>
+                {cities.map(item => <option value={item}>{item}</option>)}
             </select>
+            <select >
+                <option defaultValue>By cluster </option>
+                {cluster.map(item => <option value={item}>{item}</option>)}
+            </select>
+            <select>
+                <option defaultValue >By space available</option>
+                {space.map(item => <option value={item}>{item}</option>)}
+            </select>
+
 
         </div >
     )

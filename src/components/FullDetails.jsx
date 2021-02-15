@@ -1,34 +1,12 @@
 import React from "react";
-import { data } from "./data";
 import { Table, Button } from "react-bootstrap";
 import { useParams, Link } from "react-router-dom";
+import Data from '../warehouses.json';
 
 
 function FullDetails() {
 
     const { id } = useParams();
-
-    const renderData = (warehouse, index) => {
-        if (index + 1 == id) {
-            return (
-                <tr key={index + 1}>
-                    <td>{warehouse.id}</td>
-                    <td>{warehouse.name}</td>
-                    <td>{warehouse.code}</td>
-                    <td>{warehouse.city}</td>
-                    <td>{warehouse.type}</td>
-                    <td>{warehouse.cluster}</td>
-                    <td>{warehouse.space_available}</td>
-                    <td>{warehouse.is_registered.toString()}</td>
-                    <td>{warehouse.is_live.toString()}</td>
-                    <Link to={"/" + id + "/edit"}>
-                        <td><Button variant="outline-info">edit</Button></td>
-                    </Link>
-                </tr >
-            )
-        }
-    }
-
 
     return (<div className='container'>
         <h1 style={{ textAlign: "center" }}>WareHouse Detail</h1>
@@ -39,7 +17,28 @@ function FullDetails() {
                 </tr>
             </thead>
             <tbody>
-                {data.map(renderData)}
+                {Data.map((item, key) => {
+                    if (key + 1 == id) {
+                        return (
+                            <tr key={key}>
+                                <td>{item.id}</td>
+                                <td>{item.name}</td>
+                                <td>{item.code}</td>
+                                <td>{item.city}</td>
+                                <td>{item.type}</td>
+                                <td>{item.cluster}</td>
+                                <td>{item.space_available}</td>
+                                <td>{item.is_registered.toString()}</td>
+                                <td>{item.is_live.toString()}</td>
+                                <Link to={"/" + id + "/edit"}>
+                                    <td><Button variant="outline-info">edit</Button></td>
+                                </Link>
+                            </tr >
+                        )
+                    }
+
+                })}
+
             </tbody>
 
 

@@ -1,34 +1,20 @@
 import React from "react";
-import { data } from './data';
 import { Table, Button } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import FilterBox from './FilterBox';
+import Data from '../warehouses.json';
 
 
 
-function Details() {
+function Details(props) {
 
-    const renderData = (warehouse, index) => {
-        return (
-            <tr key={index}>
-                <td>{warehouse.id}</td>
-                <td>{warehouse.name}</td>
-                <td>{warehouse.city}</td>
-                <td>{warehouse.cluster}</td>
-                <td>{warehouse.space_available}</td>
-                <td>
-                    <Link to={"/" + warehouse.id}>
-                        <Button variant="outline-info" name={warehouse.id}>
-                            addtional info
-                        </Button>
-                    </Link>
-                </td>
-            </tr >
-        )
-    }
+    const cityArray = [...new Set(Data.map(cities => cities.city))];
+    const clusterArray = [...new Set(Data.map(clusters => clusters.cluster))];
+    const spaceArray = [...new Set(Data.map(spaces => spaces.space_available))];
+
     return (<div className='container'>
         <h1 style={{ textAlign: "center" }}>Details</h1>
-        <FilterBox />
+        <FilterBox cityArray={cityArray} clusterArray={clusterArray} spaceArray={spaceArray} />
         <Table striped bordered hover>
             <thead>
                 <tr>
@@ -36,13 +22,32 @@ function Details() {
                 </tr>
             </thead>
             <tbody>
-                {data.map(renderData)}
+                {Data.map((item, index) => {
+                    return (
+                        <tr key={index}>
+                            <td>{item.id}</td>
+                            <td>{item.name}</td>
+                            <td>{item.city}</td>
+                            <td>{item.cluster}</td>
+                            <td>{item.space_available}</td>
+                            <td>
+                                <Link to={"/" + item.id}>
+                                    <Button variant="outline-info" name={item.id}>
+                                        addtional info
+                         </Button>
+                                </Link>
+                            </td>
+                        </tr >
+                    )
+
+                })}
+
             </tbody>
 
             <tfoot></tfoot>
 
         </Table>
-    </div>
+    </div >
     )
 }
 
