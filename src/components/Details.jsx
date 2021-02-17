@@ -1,101 +1,94 @@
-import React, { useEffect, useState } from "react";
-import { Table, Button } from "react-bootstrap";
-import { Link, useParams } from "react-router-dom";
+import React, { useMemo, useState } from "react";
 import FilterBox from './FilterBox';
 import Data from '../warehouses.json';
+import TableData from './TableData';
 
-
-
-function Details(props) {
+function Details() {
 
     var tableData = Data;
     const cityArray = [...new Set(Data.map(cities => cities.city))];
     const clusterArray = [...new Set(Data.map(clusters => clusters.cluster))];
     const spaceArray = [...new Set(Data.map(spaces => spaces.space_available))];
-
     const [selected, setSelected] = useState({
-        city: '',
-        cluster: '',
-        space: ''
+        city: 'By city',
+        cluster: 'By cluster',
+        space: 'By space available',
+        search: ''
     });
-    useEffect(() => {
-        console.log(selected.city)
-        tableData = tableData.filter(item => {
-            if (item.city == selected.city) {
-                return item;
-            }
-        })
-        console.log(tableData, 'saasd');
-    })
-    console.log(tableData);
+
+    let id, value, name;
 
     function handleChange(event) {
-        const id = event.target.id;
-        const value = event.target.value;
+        id = event.target.id;
+        value = event.target.value;
+        name = event.target.name;
 
-        setSelected(preValue => {
+        setSelected(() => {
             if (id == 'city') {
                 return {
                     city: value,
                     cluster: '',
-                    space: ''
+                    space: '',
+                    search: ''
                 }
             }
             else if (id == 'cluster') {
                 return {
                     city: '',
                     cluster: value,
-                    space: ''
+                    space: '',
+                    search: ''
                 }
             }
-            else {
+            else if (id == 'space') {
                 return {
                     city: '',
                     cluster: '',
-                    space: value
+                    space: value,
+                    search: ''
+                }
+            } else if (name == 'warehouseName') {
+                return {
+                    city: '',
+                    cluster: '',
+                    space: '',
+                    search: value
+
                 }
             }
 
         })
+
     }
 
+    tableData = useMemo(() => {
+        if (!selected || selected.city == 'By city' || selected.cluster == 'By cluster' || selected.space == 'By space available') return Data;
+        return Data.filter((warehouse) => {
+
+            if (selected.search) {
+                return warehouse.name.toLowerCase().includes(selected.search.toLowerCase());
+            }
+            else if (selected.city) {
+                return warehouse.city == selected.city;
+            }
+            else if (selected.cluster) {
+                return warehouse.cluster == selected.cluster;
+            } else if (selected.space) {
+                console.log(warehouse.space, selected.space);
+                return warehouse.space_available == selected.space;
+
+            }
+        });
+    }, [selected, Data])
+    console.log(tableData, "hello tabledata")
 
 
     return (<div className='container'>
         <h1 style={{ textAlign: "center" }}>Details</h1>
-        <FilterBox cityArray={cityArray} clusterArray={clusterArray} spaceArray={spaceArray} handleChange={handleChange} />
-        <Table striped bordered hover>
-            <thead>
-                <tr>
-                    <th>ID</th><th>NAME</th><th>CITY</th><th>CLUSTER</th><th>SPACE AVAILABLE</th><th>DETAILS</th>
-                </tr>
-            </thead>
-            <tbody>
-                {tableData.map((item, index) => {
-                    return (
-                        <tr key={index}>
-                            <td>{item.id}</td>
-                            <td>{item.name}</td>
-                            <td>{item.city}</td>
-                            <td>{item.cluster}</td>
-                            <td>{item.space_available}</td>
-                            <td>
-                                <Link to={"/" + item.id}>
-                                    <Button variant="outline-info" name={item.id}>
-                                        addtional info
-                         </Button>
-                                </Link>
-                            </td>
-                        </tr >
-                    )
+        <FilterBox cityArray={cityArray} clusterArray={clusterArray} spaceArray={spaceArray} handleChange={handleChange}
+            search={selected.search} />
+        <TableData tableData={tableData} />
 
-                })}
-
-            </tbody>
-
-            <tfoot></tfoot>
-
-        </Table>
     </div >
     )
 }

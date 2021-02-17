@@ -27,8 +27,9 @@ function FilterBox(props) {
             </select>
 
             <label><strong>Search Ware House</strong>
-                <input type='text' name="warehouseName" placeholder="Enter warehouse name" />
-                <Button variant="outline-dark">Submit</Button>
+                <input type='text' name="warehouseName" placeholder="Enter warehouse name"
+                    value={props.search} onChange={props.handleChange} />
+
             </label>
 
 
